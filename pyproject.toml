@@ -22,10 +22,41 @@ dependencies = [
 [dependency-groups]
 dev = [
     "aiosqlite>=0.21.0",
+    "boto3-stubs[s3]>=1.42.72",
     "httpx>=0.28.1",
+    "mypy>=1.19.1",
     "pytest>=8.4.2",
     "pytest-asyncio>=1.2.0",
+    "types-passlib>=1.7.7.20260211",
 ]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+
+[tool.mypy]
+python_version = "3.13"
+mypy_path = "."
+explicit_package_bases = true
+
+# Error reporting
+show_error_codes = true
+pretty = true
+
+# Strictness — not full strict, but catches real bugs
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+
+# Third-party libraries that ship no stubs — silence missing-stub noise
+[[tool.mypy.overrides]]
+module = [
+    "jose",
+    "jose.*",
+    "passlib",
+    "passlib.*",
+]
+ignore_missing_imports = true

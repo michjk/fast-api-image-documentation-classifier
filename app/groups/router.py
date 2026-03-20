@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth.dependencies import get_current_user
 from app.database import get_db_session
-from app.groups.schemas import GroupResponse
+from app.groups.schemas import GroupImageResponse, GroupResponse
 from app.jobs.router import get_storage
 from app.models import Group, Job, User
 from app.storage.s3 import S3Storage
@@ -33,17 +33,17 @@ async def get_group(
 
     sorted_images = sorted(
         [img for img in group.images if img.sequence_number is not None],
-        key=lambda img: img.sequence_number,
+        key=lambda img: img.sequence_number if img.sequence_number is not None else 0,
     )
     return GroupResponse(
         group_id=group.id,
         title=group.title,
         images=[
-            {
-                "image_id": img.id,
-                "url": storage.generate_presigned_url(img.s3_key),
-                "sequence_number": img.sequence_number,
-            }
+            GroupImageResponse(
+                image_id=img.id,
+                url=storage.generate_presigned_url(img.s3_key),
+                sequence_number=img.sequence_number if img.sequence_number is not None else 0,
+            )
             for img in sorted_images
         ],
     )
