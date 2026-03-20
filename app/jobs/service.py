@@ -1,10 +1,11 @@
 import asyncio
 import uuid
 from datetime import UTC, datetime
-from typing import BinaryIO
+from typing import Any, BinaryIO
 from uuid import UUID
 
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.classification.pipeline import ClassificationPipeline
@@ -19,7 +20,7 @@ def build_image_key(user_id: UUID, job_id: UUID, filename: str) -> str:
     return f"users/{user_id}/jobs/{job_id}/{uuid.uuid4()}-{filename}"
 
 
-async def create_job(session, user_id: UUID) -> Job:
+async def create_job(session: AsyncSession, user_id: UUID) -> Job:
     job = Job(user_id=user_id, status=JobStatus.pending)
     session.add(job)
     await session.commit()
@@ -28,7 +29,7 @@ async def create_job(session, user_id: UUID) -> Job:
 
 
 async def add_uploaded_image(
-    session,
+    session: AsyncSession,
     storage: S3Storage,
     user_id: UUID,
     job_id: UUID,
@@ -64,7 +65,7 @@ def launch_job(job_id: UUID, user_id: UUID) -> None:
     asyncio.create_task(process_job_background(job_id, user_id))
 
 
-async def fetch_job_response(session, storage: S3Storage, job_id: UUID, user_id: UUID):
+async def fetch_job_response(session: AsyncSession, storage: S3Storage, job_id: UUID, user_id: UUID) -> dict[str, Any]:
     job = await session.scalar(select(Job).where(Job.id == job_id, Job.user_id == user_id))
     if job is None:
         raise ValueError("Job not found")

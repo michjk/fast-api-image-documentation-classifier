@@ -20,7 +20,7 @@ async def get_image(
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_db_session),
     storage: S3Storage = Depends(get_storage),
-):
+) -> RedirectResponse:
     image = await session.scalar(
         select(Image)
         .join(Job, Image.job_id == Job.id)

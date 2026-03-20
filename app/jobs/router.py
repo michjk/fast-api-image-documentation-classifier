@@ -29,6 +29,8 @@ async def upload_job(
 
     job = await create_job(session, user.id)
     for upload in files:
+        if upload.filename is None:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Each uploaded file must have a filename")
         await add_uploaded_image(
             session=session,
             storage=storage,

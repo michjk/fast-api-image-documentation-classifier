@@ -3,7 +3,7 @@ from uuid import UUID
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.classification.extractor import ImageExtractor
+from app.classification.extractor import ExtractedImageInfo, ImageExtractor
 from app.classification.grouper import ImageGrouper
 from app.models import Group, Image, Job, JobStatus
 
@@ -22,7 +22,7 @@ class ClassificationPipeline:
         await session.commit()
 
         images = list(await session.scalars(select(Image).where(Image.job_id == job_id)))
-        extracted: list[tuple[str, object]] = []
+        extracted: list[tuple[str, ExtractedImageInfo]] = []
         for image in images:
             info = await self.extractor.extract(image.original_filename)
             image.extracted_text = info.summary
