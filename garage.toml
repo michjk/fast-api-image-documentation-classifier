@@ -3,6 +3,8 @@ data_dir = "/var/lib/garage/data"
 
 db_engine = "lmdb"
 
+replication_factor = 1
+
 rpc_bind_addr = "0.0.0.0:3901"
 rpc_public_addr = "garage:3901"
 rpc_secret = "8b9e395aa6b69ad9226ff0a6b8ed3b6a33e5e57f8374b8224f1f0165b315e560"
