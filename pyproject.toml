@@ -1,0 +1,31 @@
+[project]
+name = "fast-api-image-documentation-classifier"
+version = "0.1.0"
+description = "FastAPI service to classify and order documentation images"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "alembic>=1.16.5",
+    "asyncpg>=0.30.0",
+    "boto3>=1.40.40",
+    "email-validator>=2.3.0",
+    "fastapi>=0.116.1",
+    "openai>=1.108.1",
+    "passlib[bcrypt]>=1.7.4",
+    "pydantic-settings>=2.11.0",
+    "python-jose[cryptography]>=3.5.0",
+    "python-multipart>=0.0.20",
+    "sqlalchemy[asyncio]>=2.0.43",
+    "uvicorn>=0.35.0",
+]
+
+[dependency-groups]
+dev = [
+    "aiosqlite>=0.21.0",
+    "httpx>=0.28.1",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
